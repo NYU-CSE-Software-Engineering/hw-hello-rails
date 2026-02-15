@@ -1,81 +1,126 @@
 ## Change the database for production
 
-In the Sinatra Wordguesser assignment, you already learned how to deploy a Sinatra app to Heroku. Deploying a Rails app is very similar, but a few extra steps are required since most Rails apps use databases.
+In the Sinatra Wordguesser assignment, you already learned how to deploy a Sinatra app to Heroku. Deploying a Rails 
+app is very similar, but a few extra steps are required since most Rails apps use databases.
 
-All apps on Heroku use the PostgreSQL database.  For Ruby/Rails apps to do so, they must include the `pg` gem.  However, we don't want to use this gem while developing, since we're using SQLite for that. Gemfiles let you specify that certain gems should only be used in certain environments.  Rails apps examine the environment variable `RAILS_ENV` to determine which environment they're running in, to make decisions such as which database to use (`config/database.yml`) and which gems to use. Heroku sets this variable to `production` at deploy time; running tests sets it to `test`; while you're running your app interactively, it's set to `development`.
+All apps on Heroku use the PostgreSQL database. For Ruby/Rails apps to do so, they must include the `pg` gem. However, 
+we don't want to use this gem while developing, since we're using SQLite for that. Gemfiles let you specify that 
+certain gems should only be used in certain environments.  Rails apps examine the environment variable `RAILS_ENV` 
+to determine which environment they're running in, to make decisions such as which database to use 
+(`config/database.yml`) and which gems to use. Heroku sets this variable to `production` at deploy time; running tests 
+sets it to `test`; while you're running your app interactively, it's set to `development`.
 
-To specify production-specific gems, you must make **two** edits to your Gemfile.  First, add this:
+To specify production-specific gems, you must make **two** edits to your `Gemfile`.  First, add this:
 
-```
+```rb
 group :production do
-  gem 'pg', '1.6.0.rc1' # for Heroku deployment
+  gem 'pg', '>=1.6.0' # for Heroku deployment
 end
 ```
 
-(If there is already a `group :production` in your Gemfile, just add those lines to it.).
+(If there is already a `group :production` in your `Gemfile`, just add those lines to it.).
 
-Second, find the line that specifies the `sqlite3` gem, and tell the Gemfile that that gem should **not** be used in production, by moving that line into its own group like so:
+Second, find the line that specifies the `sqlite3` gem, and tell the `Gemfile` that that gem should **not** be used 
+in production, by moving that line into its own group like so:
 
-```
+```rb
 group :development, :test do
   gem "sqlite3", ">= 1.4"
 end
 ```
 
-This second step is necessary because Heroku is set up in such a way that the `sqlite3` gem simply won't work, so we have to make sure it is _only_ loaded in development and test environments but _not_ production.
+This second step is necessary because Heroku is set up in such a way that the `sqlite3` gem simply won't work, so we 
+have to make sure it is _only_ loaded in development and test environments but _not_ production.
 
-As always when you modify your Gemfile, re-run `bundle install` and commit the modified `Gemfile` and `Gemfile.lock`. If it errors out, try
-`bundle config set without 'production'`. Note that bundler will remember the `without 'production'` option (check `.bundle/config`) so that you only need to run `bundle install` next time.
+As always when you modify your `Gemfile`, re-run `bundle install` and commit the modified `Gemfile` and `Gemfile.lock`. 
+If it errors out, try `bundle config set without 'production'`. Note that bundler will remember the 
+`without 'production'` option (check `.bundle/config`) so that you only need to run `bundle install` next time.
 
-Also note that when you run Bundler, it will still compute dependencies and versions for gems in the `production` group, but it won't install them.  Heroku will use `Gemfile.lock` to install the matching versions of the gems when you deploy.
+Also note that when you run Bundler, it will still compute dependencies and versions for gems in the `production` 
+group, but it won't install them. Heroku will use `Gemfile.lock` to install the matching versions of the gems when 
+you deploy.
 
 **Don't we have to modify `config/database.yml` as well?**
-You'd think so, but the way Heroku works, it actually _ignores_ `database.yml` and forces Rails apps to use Postgres.  So modifying the `production:` section of `database.yml` won't have any effect on Heroku.
+You'd think so, but the way Heroku works, it actually _ignores_ `database.yml` and forces Rails apps to use Postgres.
+So modifying the `production:` section of `database.yml` won't have any effect on Heroku. But we will need to provision
+a database once we deploy our app to Heroku.
 
+## GitHub Repo Instructions
+Now that we've got all our app up and running locally and prepped the production environment database, it's time to get
+these changes on the `main` branch of your GitHub repo.  Make a new private repo on GitHub that is owned by you. Then,
+set the new repo as the `origin` in your local repo by doing the following, replacing the username and reponame with
+your selections (I used `depasqua/esaas-rotten-potatoes`).
 
-## Pull Request Instructions
+```bash
+git remote add origin git@github.com:username/reponame.git
+```
 
-Now that we've got all our app up and running locally and prepped the production environment database, it's time to get these changes on the main branch of your GitHub repo through a Pull Request (PR). First, make sure you have committed all of your changes so far to your branch, then push that branch to the GitHub remote as you did before.
+Ensure that all of your changes and files are committed to your local branch, and then push it to the origin. The last 
+term of the command below should be the name of the branch you are currently using in your local repo, and should also
+be replicated on the origin (GitHub).
 
-You can create a PR directly through the GitHub site by clicking the "X branches" button near the top of the repo page.
+```bash
+git push --set-upstream origin branchname
+```
 
-![](.guides/img/branches.png)
+Once pushed, you can use the GitHub interface to create a pull request (PR), review it, and then merge it. Yes, this 
+is a little odd with a one-person developer repo, but code reviews and PRs will be very important when you work on a 
+team.
 
-From here, find your branch and click `New pull request`.
+After merging in GitHub, go back to your local repo and check out the `main` branch and pull in your merged changes:
+using `git checkout main && git pull origin main`.
 
-![](.guides/img/open_pr.png)
-
-Now make sure that the base branch is `main` and that the compare branch is your own. Then add a title and a description of the changes you've made as well as any other info that you'd like your team to know about your PR. Once you create the PR, let your teammates know so that they can check out the changes and approve the PR.
-
-![](.guides/img/create_pr.png)
-
-Protocols vary from team to team, but in general, it is good practice to have at least 1 or 2 teammates review your changes to ensure that no bugs creep through to the merge. Once the reviews are in, all comments addressed, and any potential merge conflicts are resolved, you can merge in your changes!
-
-Although every team member should make a pull request, only one team member needs to merge their code into the `main` branch. Once they have done that, in your Codio terminal, checkout the `main` branch and pull in these new changes using `git checkout main && git pull origin main`.
+> [!IMPORTANT]  
+> Note that by now, we expect that you have done enough of the CHIPS to be able to easily deploy to Heroku. You can also
+> use Render, if you choose. Both platforms ([Heroku] (https://devcenter.heroku.com/articles/heroku-cli) and 
+> [Render](https://render.com/docs/cli)) offer command line interfaces (CLI) tools so that you can deploy your app 
+> via command line rather than via their web applications.
 
 ## Deploy to Heroku
 
-Log in to your Heroku account by typing the command: `heroku login -i` in the terminal. Provide your berkeley.edu (or approved alternative) email but when it asks for a password, instead you must find your **API Key** from the bottom of the [Account Settings page on Heroku](https://dashboard.heroku.com/account). Copy and paste this value in for the password and you should be able to log in and bypass the 2-Factor-Authentication that is normally impossible to do in the Codio terminal.
+Use the same approach as we did in CHIP 3.7 to deploy your app to Heroku. You can use the CLI to create a new
+application, which will create a repo on their service, and set the repo as a remote on your local machine. As a
+reminder, we did this via: 
 
-Now let's add Heroku to your git repo as a remote named `heroku` using the following commands where `<xx>` is replaced by your team number (ex: `fa23-08`).
-
+```bash
+heroku create depasquale-rotten-potatoes
 ```
-heroku apps:favorites:add -a fa23-<xx>
-heroku git:remote -a fa23-<xx>
+
+OK, the moment of truth has arrived. Ensure that your code changes have been added and committed to your branch. 
+Then run `git push heroku main` to push the current head of your main branch to Heroku. 
+
+Heroku will try to install all the Gems in your gemfile and fire up your app! Once the deploy has succeeded, you can 
+find the link to your app near the bottom of the output in the terminal or in the Heroku dashboard for your app 
+which can be found [here](https://dashboard.heroku.com/teams/esaas/apps). You should now be able to view your app...
+right?!?
+
+Almost. If you try this, you'll see a Heroku error.
+
+If you use the `heroku logs` command, you will likely see a lot of output.  Scroll back and you may see references to 
+`sqlite3`. Since we have deployed our app to Heroku, Heroku has assumed (correctly) that we want to be in the 
+`production` environment. Looking back at our `config/database.yml` file, it likely says that in production we use
+`sqlite3`.
+
+This is rather easy to fix for Heroku deployment, and we don't even need to change the `.yml` file!  (Your mileage may
+vary with other PaaS options like Render).
+
+What we do need to do is provision a database for our use.  While we can do this in the Heroku web app dashboard, let's 
+get more familiar with controlling Heroku via the command line. Let's enable a database by doing:
+
+```bash
+heroku addons:create heroku-postgresql
 ```
 
-One of the challenges of modern software engineering is keeping up with changing versions.
+The database will start to be created and attached to our deployed app (provisioned). Note that Heroku will give the 
+database we provision a unique name. We can then use the name to check the status of the provisioning, since it takes
+a minute to two. You can also check the status via the Heroku dashboard.
 
-A "stack" is a term that describes the operating system and default software that you application is running on. Heroku has a [large set of stacks][stacks] you can select from.
+```bash
+heroku addons:info postgresql-shallow-68220
+```
 
-OK, the moment of truth has arrived. Make sure no one else on your team is in the middle of completing this step, then run `git push --force heroku main` to force-push the current head of your main branch to Heroku.  Although we normally prefer to avoid force-pushes where possible, this may be necessary in case your team's Heroku app still contains repository history from CHIPS 3.7.
-
-Heroku will try to install all the Gems in your gemfile and fire up your app! Once the deploy has succeeded, you can find the link to your app near the bottom of the output in the terminal or in the Heroku dashboard for your app which can be found [here](https://dashboard.heroku.com/teams/esaas/apps). You should now be able to view your app!
-Right?
-
-[stacks]: https://devcenter.heroku.com/articles/stack
-
-Almost. If you try this, you'll see a Heroku error. (If not, another team member may have performed the following steps on your deployment database already. If you want to follow along with the following steps, you can first reset your database state by heading to your Heroku app, clicking on the Heroku Postgres addon, and clicking "Reset Database" in the Settings tab).
+If you check the heroku logs (`heroku logs` on the command line), you should see the provisioned database and the web 
+application restarting.  Once that has occurred, use a web browser to check the application again! Did it work?!?
 
 <details>
 <summary>
@@ -90,9 +135,11 @@ As the error message <code>relation "movies" does not exist</code> tells us, the
 
 ## Fix Heroku deployment
 
-Creating the database locally required 2 steps: first we ran the initial migration to create the `movies` table (schema), then we seeded the database with some initial data.  We must do these 2 steps on Heroku as well, by preceding each with `heroku run`, which just runs the corresponding command in a shell on Heroku:
+Creating the database locally required 2 steps: first we ran the initial migration to create the `movies` table 
+(schema), then we seeded the database with some initial data. We must do these 2 steps on Heroku as well, by preceding 
+each with `heroku run`, which just runs the corresponding command in a shell on Heroku:
 
-```
+```bash
 heroku run rails db:migrate
 ```
 Now go verify that you can visit your app, but no movies are listed...
@@ -102,10 +149,11 @@ heroku run rails db:seed
 ...and now your app should work on Heroku just as it does locally,
 with the seed data.
 
-Note that in the future you should put these commands in a `Procfile` to avoid manually typing them. These documentations may be helpful: [Release Phase](https://devcenter.heroku.com/articles/release-phase) and [Procfile] (https://devcenter.heroku.com/articles/procfile#procfile-naming-and-location). For a more direct answer, check out [this post](https://medium.com/devkedi/run-migrations-when-deploying-to-heroku-4a11a5e9b055)
+Note that in the future you should put these commands in a `Procfile` to avoid manually typing them. These 
+documentations may be helpful: [Release Phase](https://devcenter.heroku.com/articles/release-phase) and 
+[Procfile] (https://devcenter.heroku.com/articles/procfile#procfile-naming-and-location).
 
-Voila -- you have created and deployed your first Rails app!
-
+Voilà -- you have created and deployed your first Rails app!
 
 <details>
 <summary>
@@ -125,7 +173,6 @@ Create the app container on Heroku; push the app to Heroku; run the initial migr
 </blockquote>
 </details>
 
-
 <details>
 <summary>
 When you make changes to your app code, including adding new migrations, what must you do to <i>update</i> the existing Heroku app? (HINT: try making a simple change to the app, like changing something in a view, and see if you can deduce the sequence of steps.)
@@ -134,3 +181,6 @@ When you make changes to your app code, including adding new migrations, what mu
 Commit changes to Git, then <code>git push heroku master</code> to redeploy. If you created new migrations, you also need to <code>heroku run rails db:migrate</code> to apply them on the Heroku side.
 </blockquote>
 </details>
+
+## Next
+[Part 5 - Submitting your work](Part-5.md)
