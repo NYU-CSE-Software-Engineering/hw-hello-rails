@@ -10,14 +10,14 @@ the project.
 
 3. Now you can build and start your `Docker` container as we have done previously. By now, you should be familiar with
 the commands to achieve this. Be sure that when you run the container:
-- you enable the passthrough port to the host machine is configured to port 3000,
-- the `app` directory is mounted from the host machine (enabling editing of application files outsdie of the
+- You enable the passthrough port to the host machine is configured to port 3000,
+- The `app` directory is mounted from the host machine (enabling editing of application files outside the
   container), and
-- that the container opens an interactive shell terminal for you to run commands inside the container
+- That the container opens an interactive shell terminal for you to run commands inside the container
 
 4. Verify that the container has the correct versions of the necessary software:
 - Run `ruby -v` to check your Ruby version is `>= 3.3`.
-- Run `rails -v` to check your Rails version is `7.2.3`. or higher. The assignment has not been tested with other versions, and there are files that will almost certainly cause errors with Rails `>=8.*.*`
+- Run `rails -v` to check your Rails version is `7.2.3` or higher. The assignment has not been tested with other versions, and there are files that will almost certainly cause errors with Rails `>=8.*.*`
 
 ## Create a new Rails app
 
@@ -55,8 +55,8 @@ relative to the app root. Note that we did not do the `bundle install` on the co
 the `rails new` command did it after the creation of a number of file and directories, and the creation of a Gemfile,
 as well as doing the `git init` command too!
 
-Before going further, spend a few minutes examining the contents of the new app directory 
-`rottenpotatoes` to remind yourself with some of the directories common to all Rails apps.
+Before going further, spend a few minutes examining the contents of the new app directory `rottenpotatoes` to remind 
+yourself with some of the directories common to all Rails apps.
 
 What about that message run `bundle install`? Recall that Ruby libraries are packaged as "gems", and the tool 
 `bundler` (itself a gem) tracks which versions of which libraries a particular app depends on. Open the file called 
@@ -74,7 +74,13 @@ Follow the instructions below to run and preview a Rails app locally. When you v
 see the generic Ruby on Rails landing page, which is actually being served by your app. Later we will define our own 
 routes so that the "top level" page does not default to this banner.
 
-1. Start the app in a terminal: `rails server -b 0.0.0.0`
+> [!TIP]
+> If you previously exited the Docker shell, the container is no longer running. Thus, you'll need to start it again
+> to complete the steps below, and you will need to run `bundle install` to get the container's software installed. Be
+> sure you are in the `rottenpotatoes` directory while in the shell so that you can correctly run the `bundle install`
+> command.
+
+1. Start the app: `rails server -b 0.0.0.0`
 2. Open a browser window on the host machine and go to `localhost:3000/` to visit the app's home page
 (note the `:3000` rather than `-3000`)
 3. Finally, note the output created by the server in the Docker container's shell. You should see an indication of the 
@@ -84,7 +90,7 @@ browser's request, and also (as part of the first request) some database schema 
 
 As you complete this assignment, consider doing work in phases, where you create a git branch, work on the code, test
 the code on the server with the browser, and then commit the code to the branch. Developers often take this approach to 
-make a point where if futher development goes badly, you can "rollback" to this point and start over, without starting
+make a point where if further development goes badly, you can "rollback" to this point and start over, without starting
 completely over again. Some developers will even merge this branch and then create a new branch and continue development.
 Again, these approaches support incrementally developing your new features.
 

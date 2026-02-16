@@ -36,7 +36,7 @@ runner for Rails and contains many predefined tasks, including applying a migrat
 learning more, try `rake --tasks` and `rake --help`.
 3. Assuming the migration succeeded, update the test database's schema by running `rails db:test:prepare`.
 4. Run your tests, and if all is well, apply the migration to the production database and deploy the new code to 
-production. The process for applying migrations in production  depends on the deployment environment; we'll do that
+production. The process for applying migrations in production depends on the deployment environment; we'll do that
 for Heroku in a later part of the exercise.
 
 We'll use the first 3 steps of this process to add a new table that stores each movie's title, rating, description, 
@@ -50,7 +50,7 @@ The new migration file in the `db/migrate` folder will contain an empty migratio
 following, then save the file.
 
 ```rb
-class CreateMovies < ActiveRecord::Migration[7.1]
+class CreateMovies < ActiveRecord::Migration[7.2]
   def change
     create_table :movies do |t|
       t.string 'title'
@@ -129,16 +129,16 @@ queries on movies from the Rails console.
 *  Rails defines three environments---development, production and test---each with its own copy of the database.
 
 *  A migration is a script describing a specific set of changes to the database.  As apps evolve and add features, 
-* migrations are added to express the database changes required to support those new features.
+migrations are added to express the database changes required to support those new features.
 
 *  Changing a database using a migration takes three steps: create the migration, apply the migration to your 
-* development database, and (if applicable) after testing your code apply the migration to your production database.
+development database, and (if applicable) after testing your code apply the migration to your production database.
 
 *  The `rails generate migration` generator fills in the boilerplate for a new migration, and the 
-* `ActiveRecord::Migration` class contains helpful methods for defining it.
+`ActiveRecord::Migration` class contains helpful methods for defining it.
 
 * `rails db:migrate` applies  only those migrations not already applied to the development database. The method for 
-* applying migrations to a production database depends on the deployment environment.
+applying migrations to a production database depends on the deployment environment.
 
 * `rails db:seed` runs the `db/seeds.rb` file, which can optionally contain some initial data to put into the database.
 

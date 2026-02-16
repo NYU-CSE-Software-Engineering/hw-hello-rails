@@ -72,7 +72,7 @@ using `git checkout main && git pull origin main`.
 
 > [!IMPORTANT]  
 > Note that by now, we expect that you have done enough of the CHIPS to be able to easily deploy to Heroku. You can also
-> use Render, if you choose. Both platforms ([Heroku] (https://devcenter.heroku.com/articles/heroku-cli) and 
+> use Render, if you choose. Both platforms ([Heroku](https://devcenter.heroku.com/articles/heroku-cli) and 
 > [Render](https://render.com/docs/cli)) offer command line interfaces (CLI) tools so that you can deploy your app 
 > via command line rather than via their web applications.
 
@@ -83,7 +83,7 @@ application, which will create a repo on their service, and set the repo as a re
 reminder, we did this via: 
 
 ```bash
-heroku create depasquale-rotten-potatoes
+heroku create esaas-rotten-potatoes
 ```
 
 OK, the moment of truth has arrived. Ensure that your code changes have been added and committed to your branch. 
@@ -113,7 +113,7 @@ heroku addons:create heroku-postgresql
 
 The database will start to be created and attached to our deployed app (provisioned). Note that Heroku will give the 
 database we provision a unique name. We can then use the name to check the status of the provisioning, since it takes
-a minute to two. You can also check the status via the Heroku dashboard.
+a minute or two. You can also check the status via the Heroku dashboard.
 
 ```bash
 heroku addons:info postgresql-shallow-68220
@@ -151,7 +151,7 @@ with the seed data.
 
 Note that in the future you should put these commands in a `Procfile` to avoid manually typing them. These 
 documentations may be helpful: [Release Phase](https://devcenter.heroku.com/articles/release-phase) and 
-[Procfile] (https://devcenter.heroku.com/articles/procfile#procfile-naming-and-location).
+[Procfile](https://devcenter.heroku.com/articles/procfile#procfile-naming-and-location).
 
 Voilà -- you have created and deployed your first Rails app!
 
@@ -178,7 +178,7 @@ Create the app container on Heroku; push the app to Heroku; run the initial migr
 When you make changes to your app code, including adding new migrations, what must you do to <i>update</i> the existing Heroku app? (HINT: try making a simple change to the app, like changing something in a view, and see if you can deduce the sequence of steps.)
 </summary>
 <blockquote>
-Commit changes to Git, then <code>git push heroku master</code> to redeploy. If you created new migrations, you also need to <code>heroku run rails db:migrate</code> to apply them on the Heroku side.
+Commit changes to Git, then <code>git push heroku main</code> to redeploy. If you created new migrations, you also need to <code>heroku run rails db:migrate</code> to apply them on the Heroku side.
 </blockquote>
 </details>
 

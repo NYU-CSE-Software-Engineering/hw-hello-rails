@@ -5,14 +5,14 @@ visiting `/movies`. (That is: `/movies` should be the URI path, the part that im
 port number in the URI.)
 
 Or, for that matter, visit `/turtle` or `/foobar` or any URI path at all; Rails will complain that your URI doesn't 
-match any route, because we haven’t specified any routes mapping URIs to app methods. Try `rake routes` and verify 
-that it informs us that there are no routes in our brand-new app. (Normally, if we were not runing our server in a 
+match any route, because we haven’t specified any routes mapping URIs to app methods. Try `rails routes` and verify 
+that it informs us that there are no routes in our brand-new app. (Normally, if we were not running our server in a 
 `Docker` container, we would consider opening multiple terminal/shell windows or tabs so that the app can keep running
 while you try other commands.) (If you are interested in doing this in the `Docker` shell, type `CTRL-Z` to suspend
 the running job, and immediately type `bg` to send that job (the server) to run in the background, while we maintain
 use of the shell.)
 
-More importantly, use an editor outside of the container to open the file `log/development.log` and observe that the
+More importantly, use an editor outside the container to open the file `log/development.log` and observe that the
 error message is logged there; this is where you look to find detailed error information when something goes wrong. 
 We'll show other problem-finding and debugging techniques later.
 
@@ -37,7 +37,7 @@ The root is the initial page for your application, i.e. the path / . The right b
 use of your application. In RottenPotatoes, the `Movies` index is the simplest option, but in another application 
 we might have a different action, such as rendering a marketing or login page.
 
-<details><summary>Note</summary>It is best practice to not render the except same content in two different routes, e.g. / and /movies. In Rails, you can choose to redirect the root URL to the <code>movies#index</code>, or you could write, <code>resources :movies, except: [:index]</code> to prevent /movies from being defined. Try modifying routes.rb then executing <code>rails routes</code> to see what changes!</details>
+<details><summary>Note</summary>It is best practice to not render the exact same content in two different routes, e.g. / and /movies. In Rails, you can choose to redirect the root URL to the <code>movies#index</code>, or you could write, <code>resources :movies, except: [:index]</code> to prevent /movies from being defined. Try modifying routes.rb then executing <code>rails routes</code> to see what changes!</details>
 
 Save the `routes.rb` file and run `rails routes` again, and observe that because of our change to `routes.rb`, the 
 first line of output says that the URI `GET /movies` will try to call the `index` action of the `MoviesController`; 
@@ -47,12 +47,12 @@ of choices rather than an arbitrary string.) The root route `'/'`, RottenPotatoe
 main `Movie` listings page by a mechanism we’ll soon see called a `URL redirection`.
 
 (If you want more practice with how the routes.rb contents get parsed into routes, play around with the 
-[Rails Routing Practice app](https://rails-routing-practice.herokuapp.com/) brought to you by ESaaS.)
+[Rails Routing Practice app](https://rails-routing-practice.onrender.com) brought to you by ESaaS.)
 
 Using convention over configuration, Rails will expect this controller’s actions to be defined in the class 
 `MoviesController`, and if that class isn’t defined at application start time, Rails will try to load it from 
 the file `app/controllers/movies_controller.rb`. Sure enough, if you now reload the page 
-`https://localhost:3000/movies` in your browser, you should see a different error: 
+`https://localhost:3000/movies` (or http://) in your browser, you should see a different error: 
 `uninitialized constant MoviesController`. This is good news: Rails is essentially complaining that it can’t 
 find the `MoviesController` class, but the fact that it’s even looking for that class tells us that our route 
 is working correctly! As before, this error message and additional information are captured in the log file 
@@ -70,7 +70,7 @@ Notice the command above lists the model name (ie `Movie`) followed by the field
 `rating`, `description` and `release_date`).
 
 The `rails g` / `rails generate` commands provide a number of useful methods that can auto-generate scaffolding for 
-basic `CRUD+I` operations. You can check the list of all available commands on using `rails g --help`. Now you 
+basic `CRUD+I` operations. You can check the list of all available commands using `rails g --help`. Now you 
 should have a working application even though the styling does not look too appealing. To make the page more 
 appealing, you need to incorporate CSS. You will see this in later assignments.
 
@@ -83,9 +83,8 @@ You’ve used the following commands to set up a new Rails app:
 1. `rails new` sets up the new app; the `rails` command also has subcommands to run the app locally (`rails server`) 
 and other management tasks.
 
-2. Rails and the other gems your app depends on (we added the Haml templating) are listed in the app’s `Gemfile`,
-which Bundler uses to automate the process of creating a consistent environment for your app whether in development
-or production mode.
+2. Rails and the other gems your app depends on are listed in the app’s `Gemfile`, which Bundler uses to automate the
+process of creating a consistent environment for your app whether in development or production mode.
 
 3. You created a database by running an initial migration to create the first table, then adding seed data in
 `seeds.rb` to populate the first few entries. (In a real production app, you might or might not need seed data; 
