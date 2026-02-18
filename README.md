@@ -10,7 +10,7 @@ In later assignments, you'll add features to the app, such as the ability to fil
 
 ## Parts
 - [Part 1 - Set Up / Getting Started](Part-1.md)
-- [Part 2](Part-2.md)
-- [Part 3](Part-3.md)
-- [Part 4](Part-4.md)
-- [Part 5](Part-5.md)
+- [Part 2 - Database in different environments](Part-2.md)
+- [Part 3 - Routes](Part-3.md)
+- [Part 4 - Change the database for production](Part-4.md)
+- [Part 5 - Submitting your work](Part-5.md)
